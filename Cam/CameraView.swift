@@ -11,7 +11,7 @@ import Foundation
 import AVFoundation
 import Photos
 
-class CameraView: UIView, AVCaptureFileOutputRecordingDelegate {
+class CameraView: UIView, AVCaptureFileOutputRecordingDelegate, UITextFieldDelegate {
     
     //video view
     var videoView: UIView!
@@ -62,8 +62,8 @@ class CameraView: UIView, AVCaptureFileOutputRecordingDelegate {
     private func initControlView() {
         //采集场景
         let curX = 0
-        var curY = 30 + Int(frame.size.height / 3)
-        AView = SelectView(frame: CGRect(x: curX, y: curY, width: Int(frame.size.width), height: Int(frame.size.height / 15)))
+        var curY = 30 + Int(frame.size.height / 2)
+        AView = SelectView(frame: CGRect(x: curX, y: curY, width: Int(frame.size.width), height: Int(frame.size.height / 20)))
         AView.setContents(labelTxt: "采集场景: ", cont: [
             "A1-室内-背景墙壁-正常光", "A2-室内-背景墙壁-强光", "A3-室内-背景墙壁-逆光", "A4-室内-背景墙壁-暗光", "A5-室内-背景墙壁-封闭灯光 ", "A6-室内-背景墙壁-光线不均匀",
             "A7-室内-背景地面-正常光", "A8-室内-背景地面-强光", "A9-室内-背景地面-逆光", "A10-室内-背景地面-暗光", "A11-室内-背景地面-封闭灯光 ", "A12-室内-背景地面-光线不均匀",
@@ -81,8 +81,8 @@ class CameraView: UIView, AVCaptureFileOutputRecordingDelegate {
         self.addSubview(AView)
         
         //攻击方式
-        curY = curY + Int(frame.size.height / 15)
-        HView = SelectView(frame: CGRect(x: curX, y: curY, width: Int(frame.size.width), height: Int(frame.size.height / 15)))
+        curY = curY + Int(frame.size.height / 20)
+        HView = SelectView(frame: CGRect(x: curX, y: curY, width: Int(frame.size.width), height: Int(frame.size.height / 20)))
         HView.setContents(labelTxt: "攻击方式: ", cont: [
             "H0-默认", "H1-图像-纸质照片-彩色", "H2-图像-纸质照片-黑白", "H3-图像-纸质裁剪人脸面具-彩色", "H4-图像-纸质裁剪人脸面具-黑白",
             "H5-图像-纸质裁剪半身面具-彩色", "H6-图像-纸质裁剪半身面具-黑白", "H7-图像-纸质海报全身-彩色", "H8-图像-纸质海报全身-黑白", "H9-图像-电子屏幕-(笔记本)电脑",
@@ -92,8 +92,8 @@ class CameraView: UIView, AVCaptureFileOutputRecordingDelegate {
         self.addSubview(HView)
         
         //真人维度序号
-        curY = curY + Int(frame.size.height / 15)
-        LView = SelectView(frame: CGRect(x: curX, y: curY, width: Int(frame.size.width), height: Int(frame.size.height / 15)))
+        curY = curY + Int(frame.size.height / 20)
+        LView = SelectView(frame: CGRect(x: curX, y: curY, width: Int(frame.size.width), height: Int(frame.size.height / 20)))
         LView.setContents(labelTxt: "真人维度序号: ", cont: [
             "L1-自然状态", "L2-手在脸上左右手拿手机、手挡下巴、手撩头发", "L3-切掉脸额头下巴脖子脸等不要使用道具遮挡，直接拍摄时切掉", "L4-面部表情（包括噘嘴、张嘴、大笑、鼓腮帮、皱眉等）",
             "L5-戴眼镜, 戴墨镜", "L6-戴帽子(还可以试着把帽檐拉低或斜向)", "L7-戴头巾、围巾、丝巾等", "L8-同时包含 0-7若干维度，如同时戴帽子、口罩以及眼镜等"
@@ -101,67 +101,68 @@ class CameraView: UIView, AVCaptureFileOutputRecordingDelegate {
         self.addSubview(LView)
         
         //真人录制设备
-        curY = curY + Int(frame.size.height / 15)
-        DView = SelectView(frame: CGRect(x: curX, y: curY, width: Int(frame.size.width), height: Int(frame.size.height / 15)))
+        curY = curY + Int(frame.size.height / 20)
+        DView = SelectView(frame: CGRect(x: curX, y: curY, width: Int(frame.size.width), height: Int(frame.size.height / 20)))
         DView.setContents(labelTxt: "真人录制设备: ", cont: [
             "D1-小米10", "D2-红米note9pro", "D3-荣耀9Xpro", "D4-oppoK7x", "D5-vivoiqoozi", "D6-魅族17", "D7-iphone11", "D8-大疆摄像头全景",
-            "D9-mac摄像头罗技C930C", "D10-mac摄像头罗技C1000e光角", "D11-联想摄像头广角", "D12-华为笔记本摄像头matebook4", "D13-荣耀笔记本pro2020", "D14-ipadAir", "D15-ipaddmini5",
-            "D16-华捷艾米摄像头-双目近红外", "D17-华捷艾米摄像头-RGBD（3D）", "D18-奥比中光摄像头-双目近红外", "D19-奥比中光摄像头-RGBD（3D）", "D20-健德源摄像头-双目近红外"
+            "D9-mac摄像头罗技C930C", "D10-mac摄像头罗技C1000e光角", "D11-联想摄像头广角", "D12-健德源摄像头-双目近红外", "D13-华为笔记本摄像头matebook4", "D14-荣耀笔记本pro2020", "D15-ipadAir", "D16-ipaddmini5"
             ])
         self.addSubview(DView)
         
         //攻击录制设备
-        curY = curY + Int(frame.size.height / 15)
-        DDView = SelectView(frame: CGRect(x: curX, y: curY, width: Int(frame.size.width), height: Int(frame.size.height / 15)))
+        curY = curY + Int(frame.size.height / 20)
+        DDView = SelectView(frame: CGRect(x: curX, y: curY, width: Int(frame.size.width), height: Int(frame.size.height / 20)))
         DDView.setContents(labelTxt: "攻击录制设备: ", cont: [
             "DD1-小米10", "DD2-红米note9pro", "DD3-荣耀9Xpro", "DD4-oppoK7x", "DD5-vivoiqoozi", "DD6-魅族17", "DD7-iphone11", "DD8-大疆摄像头全景",
-            "DD9-mac摄像头罗技C930C", "DD10-mac摄像头罗技C1000e光角", "DD11-联想摄像头广角", "DD12-华为笔记本摄像头matebook4", "DD13-荣耀笔记本pro2020", "DD14-ipadAir", "DD15-ipaddmini5",
-            "DD16-华捷艾米摄像头-双目近红外", "DD17-华捷艾米摄像头-RGBD（3D）", "DD18-奥比中光摄像头-双目近红外", "DD19-奥比中光摄像头-RGBD（3D）", "DD20-健德源摄像头-双目近红外"
+            "DD9-mac摄像头罗技C930C", "DD10-mac摄像头罗技C1000e光角", "DD11-联想摄像头广角", "DD12-健德源摄像头-双目近红外", "DD13-华为笔记本摄像头matebook4", "DD14-荣耀笔记本pro2020", "DD15-ipadAir", "DD16-ipaddmini5"
             ])
         self.addSubview(DDView)
         
         //人数
-        curY = curY + Int(frame.size.height / 15)
-        EView = SelectView(frame: CGRect(x: curX, y: curY, width: Int(frame.size.width / 2), height: Int(frame.size.height / 15)))
+        curY = curY + Int(frame.size.height / 20)
+        EView = SelectView(frame: CGRect(x: curX, y: curY, width: Int(frame.size.width / 2), height: Int(frame.size.height / 20)))
         EView.setContents(labelTxt: "人数: ", cont: [
             "E0-默认", "E2-1（真或假）", "E3-2 （1 真 1 假）", "E4-2（2 假）", "E5-3（1 真 2假）", "E6-3（2  真 1 假）", "E7-3（3假）", "E8->3(随机包含假人)"
             ])
         self.addSubview(EView)
         //性别
-        SView = SelectView(frame: CGRect(x: curX + Int(frame.size.width / 2), y: curY, width: Int(frame.size.width / 2), height: Int(frame.size.height / 15)))
+        SView = SelectView(frame: CGRect(x: curX + Int(frame.size.width / 2), y: curY, width: Int(frame.size.width / 2), height: Int(frame.size.height / 20)))
         SView.setContents(labelTxt: "性别: ", cont: [
             "男", "女"
             ])
         self.addSubview(SView)
         
         //年龄编号
-        curY = curY + Int(frame.size.height / 15)
-        GView = SelectView(frame: CGRect(x: curX, y: curY, width: Int(frame.size.width / 2), height: Int(frame.size.height / 15)))
+        curY = curY + Int(frame.size.height / 20)
+        GView = SelectView(frame: CGRect(x: curX, y: curY, width: Int(frame.size.width / 2), height: Int(frame.size.height / 20)))
         GView.setContents(labelTxt: "年龄: ", cont: [
             "G0-15岁及以下", "G1-20～40", "G2-40～60", "G3-60以上"
             ])
         self.addSubview(GView)
         
         //肤色
-        JView = SelectView(frame: CGRect(x: curX + Int(frame.size.width / 2), y: curY, width: Int(frame.size.width / 2), height: Int(frame.size.height / 15)))
+        JView = SelectView(frame: CGRect(x: curX + Int(frame.size.width / 2), y: curY, width: Int(frame.size.width / 2), height: Int(frame.size.height / 20)))
         JView.setContents(labelTxt: "肤色: ", cont: [
             "J0-华人", "J1-东南亚", "J2-白人"
             ])
         self.addSubview(JView)
         
         //编号
-        curY = curY + Int(frame.size.height / 15)
+        curY = curY + Int(frame.size.height / 20)
         let label = UILabel(frame: CGRect(x: curX, y: curY,
-                                          width: Int(frame.size.width * 0.2) - 5, height: Int(frame.size.height / 15)))
+                                          width: Int(frame.size.width * 0.2) - 5, height: Int(frame.size.height / 20)))
         label.text = "编号: "
         self.addSubview(label)
         pidView = UITextField(frame: CGRect(x: curX + Int(frame.size.width * 0.1), y: curY,
-                                            width: Int(frame.size.width * 0.4) - 5, height: Int(frame.size.height / 15)))
+                                            width: Int(frame.size.width * 0.4) - 5, height: Int(frame.size.height / 20)))
         pidView.borderStyle = UITextField.BorderStyle.bezel
+        pidView.keyboardType = UIKeyboardType.default
+        pidView.returnKeyType = UIReturnKeyType.done
+        pidView.clearButtonMode = UITextField.ViewMode.whileEditing
         self.addSubview(pidView)
         
         //距离
-        KView = SelectView(frame: CGRect(x: curX + Int(frame.size.width / 2), y: curY, width: Int(frame.size.width / 2), height: Int(frame.size.height / 15)))
+        KView = SelectView(frame: CGRect(x: curX + Int(frame.size.width / 2), y: curY, width: Int(frame.size.width / 2), height: Int(frame.size.height / 20)))
         KView.setContents(labelTxt: "距离: ", cont: [
             "K0-0.3米~0.5米", "K1-1米~2米", "K2-4米~5米"
             ])

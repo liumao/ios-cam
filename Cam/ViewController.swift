@@ -11,17 +11,19 @@ import AVFoundation
 import AssetsLibrary
 import Photos
 
-class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextFieldDelegate {
 
     @objc var cameraView = CameraView()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-    
+           
         self.view.backgroundColor = UIColor.white
         cameraView = CameraView(frame: UIScreen.main.bounds)
         self.view.addSubview(cameraView)
-    
+        
+        //text field delegate
+        cameraView.pidView.delegate = self
         cameraView.recordBtn.addTarget(self, action: #selector(ViewController.recordBtnClicked), for: .touchUpInside)
     }
     
@@ -33,5 +35,11 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
             NSLog("Ready to record")
             cameraView.stopSaveVideo()
         }
-    }    
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+            //收起键盘
+            cameraView.pidView.resignFirstResponder()
+            return true;
+       }
 }

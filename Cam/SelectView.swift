@@ -38,6 +38,7 @@ class SelectView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
                                       width: Int(frame.size.width * 0.2) - 5, height: Int(frame.size.height)))
         label.textColor = UIColor.gray
         label.text = labelTxt
+        label.adjustsFontSizeToFitWidth = true
         self.addSubview(label)
         
         //select下拉框
@@ -47,6 +48,19 @@ class SelectView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
         selector.dataSource = self
         contents = cont
         self.addSubview(selector)
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusing view: UIView?) -> UIView {
+        var pickerLabel: UILabel? = (view as? UILabel)
+        if pickerLabel == nil {
+            pickerLabel = UILabel()
+            pickerLabel?.font = UIFont(name: "Montserrat", size: 16)
+            pickerLabel?.textAlignment = .center
+        }
+        pickerLabel?.text = contents[row]
+        pickerLabel?.textColor = UIColor.blue
+     
+        return pickerLabel!
     }
     
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
