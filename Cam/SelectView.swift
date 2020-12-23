@@ -60,6 +60,7 @@ class SelectView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
         pickerLabel?.text = contents[row]
         pickerLabel?.textColor = UIColor.blue
         selectData = contents[row]
+        
         return pickerLabel!
     }
     
