@@ -36,6 +36,10 @@
 	</array>
 	<key>NSCameraUsageDescription</key>
 	<string></string>
+	<key>NSAppleMusicUsageDescription</key>
+	<string></string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string></string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string></string>
 	<key>NSPhotoLibraryUsageDescription</key>

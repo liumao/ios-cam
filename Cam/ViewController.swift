@@ -7,13 +7,15 @@
 //
 
 import UIKit
-import AVFoundation
 import AssetsLibrary
-import Photos
+import MobileCoreServices
 
 class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextFieldDelegate {
 
     @objc var cameraView = CameraView()
+    
+    //system camera
+    var videoPicker: UIImagePickerController!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -28,18 +30,68 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }
     
     @objc func recordBtnClicked() {
-        if (cameraView.recordBtn.currentTitle == "RECORD") {
-            NSLog("Recording...")
-            cameraView.startSaveVideo()
-        } else {
-            NSLog("Ready to record")
-            cameraView.stopSaveVideo()
-        }
+        videoPicker = UIImagePickerController()
+        videoPicker.sourceType = .camera
+        videoPicker.cameraDevice = .front
+        videoPicker.mediaTypes =  [kUTTypeMovie as String]
+        videoPicker.videoQuality = .typeHigh
+        videoPicker.delegate = self
+        self.present(videoPicker, animated: true, completion: nil)
+
     }
     
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+    @objc func textFieldShouldReturn(_ textField: UITextField) -> Bool {
             //收起键盘
             cameraView.pidView.resignFirstResponder()
             return true;
-       }
+    }
+    
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        let infodic:NSDictionary = info as NSDictionary
+        let mediaUrl: NSURL = infodic[UIImagePickerController.InfoKey.mediaURL] as! NSURL
+        let videoPath = mediaUrl.path!
+        NSLog("video path: %@", videoPath)
+        
+        //save
+        if UIVideoAtPathIsCompatibleWithSavedPhotosAlbum(videoPath) {
+            UISaveVideoAtPathToSavedPhotosAlbum(videoPath, nil, nil, nil)
+        }
+        
+        //rename
+        var newVideoPath = String(videoPath.prefix(upTo: videoPath.lastIndex(of: "/")!))
+        //get file name
+        let fileName = cameraView.getFileName()
+        
+        //file manager
+        let fileManager = FileManager()
+        
+        //create dir
+        let pid = cameraView.pidView.text!
+        let pidDir = newVideoPath + "/PID" + pid
+        if !fileManager.fileExists(atPath: pidDir) {
+            do {
+                try fileManager.createDirectory(atPath: pidDir, withIntermediateDirectories: true, attributes:nil)
+                newVideoPath = pidDir + "/" + fileName
+            } catch {
+                newVideoPath = newVideoPath + "/" + fileName
+                NSLog("rename failure")
+            }
+        } else {
+            newVideoPath = pidDir + "/" + fileName
+        }
+        NSLog("new video path: %@", newVideoPath)
+        
+        do {
+          try fileManager.moveItem(atPath: videoPath, toPath: newVideoPath)
+        } catch {
+            NSLog("rename failure")
+        }
+        picker.dismiss(animated: true, completion: nil)
+    }
+    
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        picker.dismiss(animated: true, completion: nil)
+        
+    }
+    
 }

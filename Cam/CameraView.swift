@@ -11,17 +11,7 @@ import Foundation
 import AVFoundation
 import Photos
 
-class CameraView: UIView, AVCaptureFileOutputRecordingDelegate, UITextFieldDelegate {
-    
-    //video view
-    var videoView: UIView!
-    let captureSession = AVCaptureSession()
-    var camera: AVCaptureDevice?
-    var previewLayer: AVCaptureVideoPreviewLayer!
-    //output file
-    let fileOut = AVCaptureMovieFileOutput()
-    //is recording...
-    var isRecording = false
+class CameraView: UIView, UITextFieldDelegate {
     
     //control view
     var AView: SelectView!
@@ -39,31 +29,25 @@ class CameraView: UIView, AVCaptureFileOutputRecordingDelegate, UITextFieldDeleg
     //record btn
     var recordBtn: UIButton!
     
+    //height
+    var control_height = 15
+    
     override init(frame : CGRect) {
         super.init(frame: frame)
         
-        initVideoView()
         initControlView()
         initRecordBtn()
-        initvideoConfig()
     }
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private func initVideoView() {
-        videoView = UIView(frame: CGRect(x: 0, y: 20, width: Int(frame.size.width), height: Int(frame.size.height / 2)))
-        
-        //追加到当前view
-        self.addSubview(videoView)
-    }
-    
     private func initControlView() {
         //采集场景
         let curX = 0
-        var curY = 30 + Int(frame.size.height / 2)
-        AView = SelectView(frame: CGRect(x: curX, y: curY, width: Int(frame.size.width), height: Int(frame.size.height / 20)))
+        var curY = 60
+        AView = SelectView(frame: CGRect(x: curX, y: curY, width: Int(frame.size.width), height: Int(frame.size.height / CGFloat(control_height))))
         AView.setContents(labelTxt: "采集场景: ", cont: [
             "A1-室内-背景墙壁-正常光", "A2-室内-背景墙壁-强光", "A3-室内-背景墙壁-逆光", "A4-室内-背景墙壁-暗光", "A5-室内-背景墙壁-封闭灯光 ", "A6-室内-背景墙壁-光线不均匀",
             "A7-室内-背景地面-正常光", "A8-室内-背景地面-强光", "A9-室内-背景地面-逆光", "A10-室内-背景地面-暗光", "A11-室内-背景地面-封闭灯光 ", "A12-室内-背景地面-光线不均匀",
@@ -81,8 +65,8 @@ class CameraView: UIView, AVCaptureFileOutputRecordingDelegate, UITextFieldDeleg
         self.addSubview(AView)
         
         //攻击方式
-        curY = curY + Int(frame.size.height / 20)
-        HView = SelectView(frame: CGRect(x: curX, y: curY, width: Int(frame.size.width), height: Int(frame.size.height / 20)))
+        curY = curY + Int(frame.size.height / CGFloat(control_height))
+        HView = SelectView(frame: CGRect(x: curX, y: curY, width: Int(frame.size.width), height: Int(frame.size.height / CGFloat(control_height))))
         HView.setContents(labelTxt: "攻击方式: ", cont: [
             "H0-默认", "H1-图像-纸质照片-彩色", "H2-图像-纸质照片-黑白", "H3-图像-纸质裁剪人脸面具-彩色", "H4-图像-纸质裁剪人脸面具-黑白",
             "H5-图像-纸质裁剪半身面具-彩色", "H6-图像-纸质裁剪半身面具-黑白", "H7-图像-纸质海报全身-彩色", "H8-图像-纸质海报全身-黑白", "H9-图像-电子屏幕-(笔记本)电脑",
@@ -92,8 +76,8 @@ class CameraView: UIView, AVCaptureFileOutputRecordingDelegate, UITextFieldDeleg
         self.addSubview(HView)
         
         //真人维度序号
-        curY = curY + Int(frame.size.height / 20)
-        LView = SelectView(frame: CGRect(x: curX, y: curY, width: Int(frame.size.width), height: Int(frame.size.height / 20)))
+        curY = curY + Int(frame.size.height / CGFloat(control_height))
+        LView = SelectView(frame: CGRect(x: curX, y: curY, width: Int(frame.size.width), height: Int(frame.size.height / CGFloat(control_height))))
         LView.setContents(labelTxt: "真人维度序号: ", cont: [
             "L1-自然状态", "L2-手在脸上左右手拿手机、手挡下巴、手撩头发", "L3-切掉脸额头下巴脖子脸等不要使用道具遮挡，直接拍摄时切掉", "L4-面部表情（包括噘嘴、张嘴、大笑、鼓腮帮、皱眉等）",
             "L5-戴眼镜, 戴墨镜", "L6-戴帽子(还可以试着把帽檐拉低或斜向)", "L7-戴头巾、围巾、丝巾等", "L8-同时包含 0-7若干维度，如同时戴帽子、口罩以及眼镜等"
@@ -101,8 +85,8 @@ class CameraView: UIView, AVCaptureFileOutputRecordingDelegate, UITextFieldDeleg
         self.addSubview(LView)
         
         //真人录制设备
-        curY = curY + Int(frame.size.height / 20)
-        DView = SelectView(frame: CGRect(x: curX, y: curY, width: Int(frame.size.width), height: Int(frame.size.height / 20)))
+        curY = curY + Int(frame.size.height / CGFloat(control_height))
+        DView = SelectView(frame: CGRect(x: curX, y: curY, width: Int(frame.size.width), height: Int(frame.size.height / CGFloat(control_height))))
         DView.setContents(labelTxt: "真人录制设备: ", cont: [
             "D1-小米10", "D2-红米note9pro", "D3-荣耀9Xpro", "D4-oppoK7x", "D5-vivoiqoozi", "D6-魅族17", "D7-iphone11", "D8-大疆摄像头全景",
             "D9-mac摄像头罗技C930C", "D10-mac摄像头罗技C1000e光角", "D11-联想摄像头广角", "D12-健德源摄像头-双目近红外", "D13-华为笔记本摄像头matebook4", "D14-荣耀笔记本pro2020", "D15-ipadAir", "D16-ipaddmini5"
@@ -110,51 +94,53 @@ class CameraView: UIView, AVCaptureFileOutputRecordingDelegate, UITextFieldDeleg
         self.addSubview(DView)
         
         //攻击录制设备
-        curY = curY + Int(frame.size.height / 20)
-        DDView = SelectView(frame: CGRect(x: curX, y: curY, width: Int(frame.size.width), height: Int(frame.size.height / 20)))
+        curY = curY + Int(frame.size.height / CGFloat(control_height))
+        DDView = SelectView(frame: CGRect(x: curX, y: curY, width: Int(frame.size.width), height: Int(frame.size.height / CGFloat(control_height))))
         DDView.setContents(labelTxt: "攻击录制设备: ", cont: [
-            "DD1-小米10", "DD2-红米note9pro", "DD3-荣耀9Xpro", "DD4-oppoK7x", "DD5-vivoiqoozi", "DD6-魅族17", "DD7-iphone11", "DD8-大疆摄像头全景",
+            "DD0-默认", "DD1-小米10", "DD2-红米note9pro", "DD3-荣耀9Xpro", "DD4-oppoK7x", "DD5-vivoiqoozi", "DD6-魅族17", "DD7-iphone11", "DD8-大疆摄像头全景",
             "DD9-mac摄像头罗技C930C", "DD10-mac摄像头罗技C1000e光角", "DD11-联想摄像头广角", "DD12-健德源摄像头-双目近红外", "DD13-华为笔记本摄像头matebook4", "DD14-荣耀笔记本pro2020", "DD15-ipadAir", "DD16-ipaddmini5"
             ])
         self.addSubview(DDView)
         
         //人数
-        curY = curY + Int(frame.size.height / 20)
-        EView = SelectView(frame: CGRect(x: curX, y: curY, width: Int(frame.size.width / 2), height: Int(frame.size.height / 20)))
+        curY = curY + Int(frame.size.height / CGFloat(control_height))
+        EView = SelectView(frame: CGRect(x: curX, y: curY, width: Int(frame.size.width), height: Int(frame.size.height / CGFloat(control_height))))
         EView.setContents(labelTxt: "人数: ", cont: [
             "E0-默认", "E2-1（真或假）", "E3-2 （1 真 1 假）", "E4-2（2 假）", "E5-3（1 真 2假）", "E6-3（2  真 1 假）", "E7-3（3假）", "E8->3(随机包含假人)"
             ])
         self.addSubview(EView)
+        
         //性别
-        SView = SelectView(frame: CGRect(x: curX + Int(frame.size.width / 2), y: curY, width: Int(frame.size.width / 2), height: Int(frame.size.height / 20)))
+        curY = curY + Int(frame.size.height / CGFloat(control_height))
+        SView = SelectView(frame: CGRect(x: curX, y: curY, width: Int(frame.size.width), height: Int(frame.size.height / CGFloat(control_height))))
         SView.setContents(labelTxt: "性别: ", cont: [
             "男", "女"
             ])
         self.addSubview(SView)
         
-        //年龄编号
-        curY = curY + Int(frame.size.height / 20)
-        GView = SelectView(frame: CGRect(x: curX, y: curY, width: Int(frame.size.width / 2), height: Int(frame.size.height / 20)))
+        //年龄
+        curY = curY + Int(frame.size.height / CGFloat(control_height))
+        GView = SelectView(frame: CGRect(x: curX, y: curY, width: Int(frame.size.width), height: Int(frame.size.height / CGFloat(control_height))))
         GView.setContents(labelTxt: "年龄: ", cont: [
             "G0-15岁及以下", "G1-20～40", "G2-40～60", "G3-60以上"
             ])
         self.addSubview(GView)
         
         //肤色
-        JView = SelectView(frame: CGRect(x: curX + Int(frame.size.width / 2), y: curY, width: Int(frame.size.width / 2), height: Int(frame.size.height / 20)))
+        curY = curY + Int(frame.size.height / CGFloat(control_height))
+        JView = SelectView(frame: CGRect(x: curX, y: curY, width: Int(frame.size.width), height: Int(frame.size.height / CGFloat(control_height))))
         JView.setContents(labelTxt: "肤色: ", cont: [
             "J0-华人", "J1-东南亚", "J2-白人"
             ])
         self.addSubview(JView)
         
         //编号
-        curY = curY + Int(frame.size.height / 20)
-        let label = UILabel(frame: CGRect(x: curX, y: curY,
-                                          width: Int(frame.size.width * 0.2) - 5, height: Int(frame.size.height / 20)))
+        curY = curY + Int(frame.size.height / CGFloat(control_height))
+        let label = UILabel(frame: CGRect(x: curX, y: curY, width: Int(frame.size.width * 0.4) - 5, height: Int(frame.size.height / CGFloat(control_height))))
         label.text = "编号: "
         self.addSubview(label)
-        pidView = UITextField(frame: CGRect(x: curX + Int(frame.size.width * 0.1), y: curY,
-                                            width: Int(frame.size.width * 0.4) - 5, height: Int(frame.size.height / 20)))
+        pidView = UITextField(frame: CGRect(x: curX + Int(frame.size.width * 0.2), y: curY,
+                                            width: Int(frame.size.width * 0.8) - 5, height: Int(frame.size.height / CGFloat(control_height))))
         pidView.borderStyle = UITextField.BorderStyle.bezel
         pidView.keyboardType = UIKeyboardType.default
         pidView.returnKeyType = UIReturnKeyType.done
@@ -162,7 +148,8 @@ class CameraView: UIView, AVCaptureFileOutputRecordingDelegate, UITextFieldDeleg
         self.addSubview(pidView)
         
         //距离
-        KView = SelectView(frame: CGRect(x: curX + Int(frame.size.width / 2), y: curY, width: Int(frame.size.width / 2), height: Int(frame.size.height / 20)))
+        curY = curY + Int(frame.size.height / CGFloat(control_height))
+        KView = SelectView(frame: CGRect(x: curX, y: curY, width: Int(frame.size.width), height: Int(frame.size.height / CGFloat(control_height))))
         KView.setContents(labelTxt: "距离: ", cont: [
             "K0-0.3米~0.5米", "K1-1米~2米", "K2-4米~5米"
             ])
@@ -171,7 +158,7 @@ class CameraView: UIView, AVCaptureFileOutputRecordingDelegate, UITextFieldDeleg
     
     private func initRecordBtn() {
         recordBtn = UIButton(type: .custom)
-        recordBtn.frame = CGRect(x: frame.size.width / 2 - 50, y: frame.size.height - 45, width: 100, height: 40)
+        recordBtn.frame = CGRect(x: frame.size.width / 2 - 50, y: frame.size.height - 100, width: 100, height: 40)
         recordBtn.setTitleColor(.black, for: .normal)
         recordBtn.setTitle("RECORD", for: .normal)
 
@@ -180,30 +167,6 @@ class CameraView: UIView, AVCaptureFileOutputRecordingDelegate, UITextFieldDeleg
         recordBtn.layer.borderWidth = 1.0
 
         self.addSubview(recordBtn)
-    }
-    
-    private func initvideoConfig() {
-        camera = cameraWithPosition(position: AVCaptureDevice.Position.front)
-        captureSession.sessionPreset = AVCaptureSession.Preset.vga640x480
-        if let videoInput = try? AVCaptureDeviceInput(device: self.camera!) {
-            self.captureSession.addInput(videoInput)
-        }
-        
-        captureSession.addOutput(fileOut)
-        
-        let videoLayer = AVCaptureVideoPreviewLayer(session: self.captureSession)
-        videoLayer.frame = videoView.bounds
-        videoView.layer.addSublayer(videoLayer)
-    }
-    
-    func cameraWithPosition(position: AVCaptureDevice.Position) -> AVCaptureDevice? {
-        let devices = AVCaptureDevice.devices(for: AVMediaType.video)
-        for item in devices {
-            if item.position == position {
-                return item
-            }
-        }
-        return nil
     }
     
     //date time
@@ -217,18 +180,16 @@ class CameraView: UIView, AVCaptureFileOutputRecordingDelegate, UITextFieldDeleg
     
     //take flag
     func getFlag(param: String) -> String {
-        NSLog("in %@", param)
         if (!param.contains("-")) {
             return param
         }
         let array = param.split(separator: "-")
-        NSLog("out %@", String(array[0]))
         return String(array[0])
     }
     
     //get file name
     func getFileName() -> String {
-        let fileName = String(format: "%@_%@_%@(%@)_%@_%@_%@_%@_%@_%@_%@_PID%@",
+        let fileName = String(format: "%@_%@_%@(%@)_%@_%@_%@_%@_%@_%@_%@_PID%@.mp4",
             getDateTime(),
             getFlag(param: (AView?.selectData)!),
             getFlag(param: (HView?.selectData)!),
@@ -244,51 +205,5 @@ class CameraView: UIView, AVCaptureFileOutputRecordingDelegate, UITextFieldDeleg
         )
         return fileName
     }
-    
-    //save video
-    func startSaveVideo() {
-        recordBtn.setTitle("STOP", for: .normal)
-        isRecording = true
-        
-        //启动采集
-        captureSession.startRunning()
-        
-        let path = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
-        let documentDirectory = path[0] as String
-        let filePath: String? = "\(documentDirectory)/\(getFileName()).mp4"
-        let fileUrl: NSURL? = NSURL(fileURLWithPath: filePath!)
-        NSLog(filePath!)
-        
-        //启动视频编码输出
-        fileOut.startRecording(to: fileUrl! as URL, recordingDelegate: self as AVCaptureFileOutputRecordingDelegate)
-    }
-    func stopSaveVideo() {
-        recordBtn.setTitle("RECORD", for: .normal)
-        isRecording = false
-        
-        //停止录像以及停止采集
-        fileOut.stopRecording()
-        captureSession.stopRunning()
-    }
-    
-    func captureOutput(captureOutput: AVCaptureFileOutput!, didStartRecordingToOutputFileAtURL fileURL: NSURL!, fromConnections connections: [AnyObject]!) {
-        NSLog("captureOutput without error")
-    }
-    
-    func captureOutput(captureOutput: AVCaptureFileOutput!, didFinishRecordingToOutputFileAtURL outputFileURL: NSURL!, fromConnections connections: [AnyObject]!, error: NSError!) {
-        NSLog("captureOutput without error")
-    }
-    
-    func fileOutput(_ output: AVCaptureFileOutput, didFinishRecordingTo outputFileURL: URL, from connections: [AVCaptureConnection], error: Error?) {
-        NSLog("fileOutput:%@", outputFileURL.absoluteString)
-        
-        PHPhotoLibrary.shared().performChanges({PHAssetChangeRequest .creationRequestForAssetFromVideo(atFileURL: outputFileURL as URL)},
-                                               completionHandler: {(isSuccess: Bool, error:  NSError) in
-            if (isSuccess) {
-                NSLog("保存成功!")
-            } else {
-                NSLog("保存失败：@", error.localizedDescription)
-            }} as? (Bool, Error?) -> Void
-        )
-    }
+
 }
