@@ -106,7 +106,7 @@ class CameraView: UIView, UITextFieldDelegate {
         curY = curY + Int(frame.size.height / CGFloat(control_height))
         EView = SelectView(frame: CGRect(x: curX, y: curY, width: Int(frame.size.width), height: Int(frame.size.height / CGFloat(control_height))))
         EView.setContents(labelTxt: "人数: ", cont: [
-            "E0-默认", "E2-1（真或假）", "E3-2 （1 真 1 假）", "E4-2（2 假）", "E5-3（1 真 2假）", "E6-3（2  真 1 假）", "E7-3（3假）", "E8->3(随机包含假人)"
+            "E0-默认", "E1-1（真或假）", "E2-2 （1 真 1 假）", "E3-2（2 假）", "E4-3（1 真 2假）", "E5-3（2  真 1 假）", "E6-3（3假）", "E7->3(随机包含假人)"
             ])
         self.addSubview(EView)
         
@@ -145,6 +145,7 @@ class CameraView: UIView, UITextFieldDelegate {
         pidView.keyboardType = UIKeyboardType.default
         pidView.returnKeyType = UIReturnKeyType.done
         pidView.clearButtonMode = UITextField.ViewMode.whileEditing
+        pidView.textColor = .red
         self.addSubview(pidView)
         
         //距离
