@@ -143,6 +143,7 @@ class CameraView: UIView, UITextFieldDelegate {
         pidView.keyboardType = UIKeyboardType.default
         pidView.returnKeyType = UIReturnKeyType.done
         pidView.clearButtonMode = UITextField.ViewMode.whileEditing
+        pidView.textColor = .red
         self.addSubview(pidView)
         
         //距离
