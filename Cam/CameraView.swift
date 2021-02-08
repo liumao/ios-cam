@@ -172,7 +172,7 @@ class CameraView: UIView, UITextFieldDelegate {
     //date time
     func getDateTime() -> String {
         let dformatter = DateFormatter()
-        dformatter.dateFormat = "yyyyMMdd-HHmm"
+        dformatter.dateFormat = "yyyyMMdd-HHmmss"
         
         let now = NSDate()
         return dformatter.string(from: now as Date)
