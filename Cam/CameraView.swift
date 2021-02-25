@@ -100,8 +100,8 @@ class CameraView: UIView, UITextFieldDelegate {
         DDView.setContents(labelTxt: "攻击录制设备: ", cont: [
             "DD0-默认", "DD1-小米10", "DD2-红米note9pro", "DD3-荣耀9Xpro", "DD4-oppoK7x", "DD5-vivoiqoozi", "DD6-魅族17", "DD7-iphone11", "DD8-大疆摄像头全景", "DD9-mac摄像头罗技C930C", "DD10-mac摄像头罗技C1000e广角", "DD11-联想摄像头广角", "DD17-OPPOAce2", "DD18-realmeQ2pro", "DD13-华为笔记本", "DD14-荣耀笔记本", "DD15-ipadAir", "DD16-ipaddmini5", "DD12-健德源摄像头-双目近红外", "DD19-华捷艾米", "DD20-奥比中光",
             "DD21-小米10", "DD22-红米note9pro", "DD23-荣耀9Xpro", "DD24-oppoK7x", "DD25-vivoiqoozi", "DD26-魅族17", "DD27-iphone11", "DD28-大疆摄像头全景", "DD29-mac摄像头罗技C1000e广角", "DD30-联想摄像头广角", "DD31-ONEPLUS8", "DD32-VIVOY3s", "DD33-华为笔记本摄像头matebook4", "DD34-健德源摄像头-双目近红外", "DD35-华捷艾米", "DD36-奥比中光",
-            "DD41-小米10", "DD42-红米note9pro", "DD43-荣耀9Xpro", "DD44-oppoK7x", "DD45-vivoiqoozi", "DD46-魅族17", "DD47-iphone11", "DD48-大疆摄像头全景", "DD49-mac摄像头罗技C1000e广角", "DD50-联想摄像头广角", "DD51-华为mate30pro", "DD52-OPPOreno3pro", "DD53-ipaDDDDmini5", "DD54-健德源摄像头-双目近红外", "DD55-华捷艾米", "DD56-奥比中光",
-            "DD61-小米10", "DD62-红米note9pro", "DD63-荣耀9Xpro", "DD64-oppoK7x", "DD65-vivoiqoozi", "DD66-魅族17", "DD67-iphone11", "DD68-大疆摄像头全景", "DD69-mac摄像头罗技C930C", "DD70-联想摄像头广角", "DD71-华为mate30pro", "DD72-OPPOreno3pro", "DD73-ipaDDDDmini5", "DD74-健德源摄像头-双目近红外", "DD75-华捷艾米", "DD76-奥比中光"
+            "DD41-小米10", "DD42-红米note9pro", "DD43-荣耀9Xpro", "DD44-oppoK7x", "DD45-vivoiqoozi", "DD46-魅族17", "DD47-iphone11", "DD48-大疆摄像头全景", "DD49-mac摄像头罗技C1000e广角", "DD50-联想摄像头广角", "DD51-华为mate30pro", "DD52-OPPOreno3pro", "DD53-ipaddmini5", "DD54-健德源摄像头-双目近红外", "DD55-华捷艾米", "DD56-奥比中光",
+            "DD61-小米10", "DD62-红米note9pro", "DD63-荣耀9Xpro", "DD64-oppoK7x", "DD65-vivoiqoozi", "DD66-魅族17", "DD67-iphone11", "DD68-大疆摄像头全景", "DD69-mac摄像头罗技C930C", "DD70-联想摄像头广角", "DD71-华为mate30pro", "DD72-OPPOreno3pro", "DD73-荣耀笔记本2020", "DD74-健德源摄像头-双目近红外", "DD75-华捷艾米", "DD76-奥比中光"
             ])
         self.addSubview(DDView)
         
